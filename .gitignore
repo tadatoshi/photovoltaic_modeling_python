@@ -1,0 +1,9 @@
+/coverage/
+/doc/
+/tmp/
+.DS_Store
+__pycache__/
+dist/
+*.egg-info/
+*/build/
+build/
