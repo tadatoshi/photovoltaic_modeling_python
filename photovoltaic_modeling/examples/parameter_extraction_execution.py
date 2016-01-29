@@ -1,4 +1,4 @@
-from root_finding.parameter_extraction import ParameterExtraction
+from photovoltaic_modeling.parameter_extraction import ParameterExtraction
 
 parameter_extraction = ParameterExtraction(args.short_circuit_current, args.open_circuit_voltage, 
                                            args.maximum_power_point_current, args.maximum_power_point_voltage, None, 
