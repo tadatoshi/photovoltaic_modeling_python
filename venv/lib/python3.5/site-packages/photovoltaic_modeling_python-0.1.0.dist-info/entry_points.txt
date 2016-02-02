@@ -1,0 +1,3 @@
+[console_scripts]
+photovoltaic_modeling = photovoltaic_modeling.command_line:main
+
