@@ -24,7 +24,7 @@ def main():
     parser_parameter_extraction.add_argument('--maximum_power_point_voltage', nargs='?', type=float, required=True)
     parser_parameter_extraction.add_argument('--number_of_cells_in_series', nargs='?', type=float, required=True)
     parser_parameter_extraction.add_argument('--series_resistance_estimate', nargs='?', type=float, default=1)
-    parser_parameter_extraction.add_argument('--shunt_resistance_estimate', nargs='?', type=float, default=1)
+    parser_parameter_extraction.add_argument('--shunt_resistance_estimate', nargs='?', type=float, default=1000)
     parser_parameter_extraction.add_argument('--diode_quality_factor_estimate', nargs='?', type=float, default=1)
     # Note: Calls execute_parameter_extraction function with the arguments:
     parser_parameter_extraction.set_defaults(func=execute_parameter_extraction)
@@ -36,8 +36,7 @@ def main():
 def execute_parameter_extraction(args):
     from photovoltaic_modeling.parameter_extraction import ParameterExtraction
     parameter_extraction = ParameterExtraction(args.short_circuit_current, args.open_circuit_voltage, 
-                                               args.maximum_power_point_current, args.maximum_power_point_voltage, None, 
-                                               None, None, 
+                                               args.maximum_power_point_current, args.maximum_power_point_voltage, 
                                                number_of_cells_in_series = args.number_of_cells_in_series)
 
     parameter_estimates = [args.series_resistance_estimate, args.shunt_resistance_estimate, args.diode_quality_factor_estimate]

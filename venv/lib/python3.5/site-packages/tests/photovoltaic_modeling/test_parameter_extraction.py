@@ -9,14 +9,13 @@ class TestParameterExtraction(unittest.TestCase):
         open_circuit_voltage = 42.1 # [V]
         maximum_power_point_current = 3.56 # [A]
         maximum_power_point_voltage = 33.7 # [V]
-        maximum_power_point_power = 120 # [W]
-        short_circuit_current_temperature_coefficient = -0.160
-        power_temperature_coefficient = -0.5
+        # maximum_power_point_power = 120 # [W]
+        # short_circuit_current_temperature_coefficient = -0.160
+        # power_temperature_coefficient = -0.5
         number_of_cells_in_series = 72
 
         parameter_extraction = ParameterExtraction(short_circuit_current, open_circuit_voltage, 
-                                                   maximum_power_point_current, maximum_power_point_voltage, maximum_power_point_power, 
-                                                   short_circuit_current_temperature_coefficient, power_temperature_coefficient, 
+                                                   maximum_power_point_current, maximum_power_point_voltage, 
                                                    number_of_cells_in_series = number_of_cells_in_series)
 
         # series_resistance_estimate = 0.5
@@ -48,16 +47,15 @@ class TestParameterExtraction(unittest.TestCase):
         open_circuit_voltage = 42.1 # [V]
         maximum_power_point_current = 3.56 # [A]
         maximum_power_point_voltage = 33.7 # [V]
-        maximum_power_point_power = 120 # [W]
-        short_circuit_current_temperature_coefficient = -0.160
-        power_temperature_coefficient = -0.5
+        # maximum_power_point_power = 120 # [W]
+        # short_circuit_current_temperature_coefficient = -0.160
+        # power_temperature_coefficient = -0.5
         number_of_cells_in_series = 72
 
         number_of_iterations = 1000
 
         parameter_extraction = ParameterExtraction(short_circuit_current, open_circuit_voltage, 
-                                                   maximum_power_point_current, maximum_power_point_voltage, maximum_power_point_power, 
-                                                   short_circuit_current_temperature_coefficient, power_temperature_coefficient, 
+                                                   maximum_power_point_current, maximum_power_point_voltage, 
                                                    number_of_cells_in_series = number_of_cells_in_series, 
                                                    number_of_iterations = number_of_iterations)
 
@@ -90,16 +88,15 @@ class TestParameterExtraction(unittest.TestCase):
         open_circuit_voltage = 22.5 # [V]
         maximum_power_point_current = 5.29 # [A]
         maximum_power_point_voltage = 18.9 # [V]
-        maximum_power_point_power = 100 # [W] Not used for the calculation. TODO: Remove this parameter. 
-        short_circuit_current_temperature_coefficient = None # Not used for the calculation. TODO: Remove this parameter.
-        power_temperature_coefficient = None # Not used for the calculation. TODO: Remove this parameter. 
+        # maximum_power_point_power = 100 # [W] Not used for the calculation. TODO: Remove this parameter. 
+        # short_circuit_current_temperature_coefficient = None # Not used for the calculation. TODO: Remove this parameter.
+        # power_temperature_coefficient = None # Not used for the calculation. TODO: Remove this parameter. 
         number_of_cells_in_series = 36
 
         number_of_iterations = 1000
 
         parameter_extraction = ParameterExtraction(short_circuit_current, open_circuit_voltage, 
-                                                   maximum_power_point_current, maximum_power_point_voltage, maximum_power_point_power, 
-                                                   short_circuit_current_temperature_coefficient, power_temperature_coefficient, 
+                                                   maximum_power_point_current, maximum_power_point_voltage, 
                                                    number_of_cells_in_series = number_of_cells_in_series, 
                                                    number_of_iterations = number_of_iterations)
 

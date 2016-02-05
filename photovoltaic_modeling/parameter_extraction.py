@@ -14,17 +14,13 @@ class ParameterExtraction(object):
     nominal_temperature = 25 + 273    
 
     def __init__(self, short_circuit_current, open_circuit_voltage, 
-                 maximum_power_point_current, maximum_power_point_voltage, maximum_power_point_power, 
-                 short_circuit_current_temperature_coefficient, power_temperature_coefficient, 
+                 maximum_power_point_current, maximum_power_point_voltage, 
                  number_of_cells_in_series = 1, 
                  **optional_keyword_arguments):
         self.__short_circuit_current = short_circuit_current
         self.__open_circuit_voltage = open_circuit_voltage
         self.__maximum_power_point_current = maximum_power_point_current
         self.__maximum_power_point_voltage = maximum_power_point_voltage
-        self.__maximum_power_point_power = maximum_power_point_power
-        self.__short_circuit_current_temperature_coefficient = short_circuit_current_temperature_coefficient
-        self.__power_temperature_coefficient = power_temperature_coefficient
         self.__number_of_cells_in_series = number_of_cells_in_series
 
         self.number_of_iterations = optional_keyword_arguments.get('number_of_iterations', None)
