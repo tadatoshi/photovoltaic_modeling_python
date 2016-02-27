@@ -1,5 +1,5 @@
 import unittest
-from photovoltaic_modeling.parameter_extraction import ParameterExtraction
+from photovoltaic_modeling.parameter.parameter_extraction import ParameterExtraction
 
 class TestParameterExtraction(unittest.TestCase):
 

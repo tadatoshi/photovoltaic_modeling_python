@@ -34,7 +34,7 @@ def main():
     args.func(args)
 
 def execute_parameter_extraction(args):
-    from photovoltaic_modeling.parameter_extraction import ParameterExtraction
+    from photovoltaic_modeling.parameter.parameter_extraction import ParameterExtraction
     parameter_extraction = ParameterExtraction(args.short_circuit_current, args.open_circuit_voltage, 
                                                args.maximum_power_point_current, args.maximum_power_point_voltage, 
                                                number_of_cells_in_series = args.number_of_cells_in_series)

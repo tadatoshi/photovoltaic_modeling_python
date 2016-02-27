@@ -1,4 +1,4 @@
-from photovoltaic_modeling.parameter_extraction import ParameterExtraction
+from photovoltaic_modeling.parameter.parameter_extraction import ParameterExtraction
 
 short_circuit_current = 3.87 
 open_circuit_voltage = 42.1 

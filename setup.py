@@ -81,7 +81,7 @@ setup(
     # simple. Or you can use find_packages().
     # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     # packages=find_packages(exclude=['tests']),
-    packages=['photovoltaic_modeling', 'tests.photovoltaic_modeling', 'photovoltaic_modeling.examples'], 
+    packages=['photovoltaic_modeling', 'tests.photovoltaic_modeling', 'photovoltaic_modeling.parameter', 'tests.photovoltaic_modeling.parameter', 'photovoltaic_modeling.examples'], 
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
