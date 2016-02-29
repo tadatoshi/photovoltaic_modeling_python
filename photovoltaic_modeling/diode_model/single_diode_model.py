@@ -1,5 +1,6 @@
 from math import exp
 import numpy
+from photovoltaic_modeling.parameter.parameter_extraction import ParameterExtraction
 
 '''
 References
@@ -43,22 +44,29 @@ class SingleDiodeModel(object):
         self.diode_quality_factor = diode_quality_factor
 
     def calculate(self, operating_temperature, actual_irradiance):
+    # def calculate(self, operating_temperature, actual_irradiance, maximum_power_point_current, maximum_power_point_voltage):
 
+        actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)      
         actual_open_circuit_voltage = round(self.__actual_voltage(self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
-        actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)        
 
-        nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
+        # actual_maximum_power_point_current = self.__actual_current(maximum_power_point_current, operating_temperature, actual_irradiance) 
+        # actual_maximum_power_point_voltage = self.__actual_voltage(maximum_power_point_voltage, operating_temperature)
+
+        # self.__extract_unknown_paramaters(actual_short_circuit_current, actual_open_circuit_voltage, actual_maximum_power_point_current, actual_maximum_power_point_voltage)
+
+        # nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
         # nominal_saturation_current = self.__nominal_saturation_current(nominal_thermal_voltage)
         # saturation_current = self.__saturation_current(nominal_saturation_current, operating_temperature)
-        saturation_current = self.__saturation_current(operating_temperature, nominal_thermal_voltage)
+
+        operating_thermal_voltage = self.__thermal_voltage(operating_temperature)
+
+        saturation_current = self.__saturation_current(operating_temperature, operating_thermal_voltage)
 
         # nominal_photo_current = self.short_circuit_current
         
         # photo_current = self.__photo_current(actual_irradiance, nominal_photo_current, operating_temperature)
 
         photo_current = actual_short_circuit_current
-
-        operating_thermal_voltage = self.__thermal_voltage(operating_temperature)
 
         # Make sure to take number of decimal digits into account:
         number_of_elements = int(actual_open_circuit_voltage * 10**self.number_of_voltage_decimal_digits) + 1
@@ -87,7 +95,24 @@ class SingleDiodeModel(object):
         if isinstance(value, float):
             return value
         else:
-            return float(value)        
+            return float(value)    
+
+    # def __extract_unknown_paramaters(self, actual_short_circuit_current, actual_open_circuit_voltage, actual_maximum_power_point_current, actual_maximum_power_point_voltage):
+
+    #     parameter_extraction = ParameterExtraction(actual_short_circuit_current, actual_open_circuit_voltage, 
+    #                                                actual_maximum_power_point_current, actual_maximum_power_point_voltage, 
+    #                                                number_of_cells_in_series = self.number_of_cells_in_series)
+
+    #     series_resistance_estimate = 1
+    #     shunt_resistance_estimate = 1000
+    #     diode_quality_factor_estimate = 1  
+    #     parameter_estimates = [series_resistance_estimate, shunt_resistance_estimate, diode_quality_factor_estimate]
+
+    #     parameter_extraction.calculate(parameter_estimates)
+
+    #     self.series_resistance = parameter_extraction.series_resistance
+    #     self.shunt_resistance = parameter_extraction.shunt_resistance
+    #     self.diode_quality_factor = parameter_extraction.diode_quality_factor
 
     def __thermal_voltage(self, temperature):
         return (self.number_of_cells_in_series * self.boltzmann_constant * temperature) / self.charge_of_electron

@@ -23,14 +23,14 @@ class TestParameterExtraction(unittest.TestCase):
         diode_quality_factor_estimate = 1       
         parameter_estimates = [series_resistance_estimate, shunt_resistance_estimate, diode_quality_factor_estimate]
 
-        solution = parameter_extraction.calculate(parameter_estimates)
+        parameter_extraction.calculate(parameter_estimates)
 
         # Note: Results:
         #   With series_resistance_estimate = 0.5, shunt_resistance_estimate = 1500, diode_quality_factor_estimate = 1.5:
-        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor_estimate = 1.343
+        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor = 1.343
         #   With series_resistance_estimate = 1, shunt_resistance_estimate = 1, diode_quality_factor_estimate = 1:
         #        (1 is chosen because the two latter parameters are used in the denominator of divisions and 0 cannot be used.)
-        #        series_resistance = 0.58, shunt_resistance = 1398, diode_quality_factor_estimate = 1.318
+        #        series_resistance = 0.58, shunt_resistance = 1398, diode_quality_factor = 1.318
         self.assertAlmostEqual(parameter_extraction.series_resistance, 0.47, delta = 0.2) # [Ohm]
         self.assertAlmostEqual(parameter_extraction.shunt_resistance, 1365, delta = 50) # [Ohm]
         self.assertAlmostEqual(parameter_extraction.diode_quality_factor, 1.397, delta = 0.08)
@@ -61,16 +61,16 @@ class TestParameterExtraction(unittest.TestCase):
         # diode_quality_factor_estimate = 1               
         parameter_estimates = [series_resistance_estimate, shunt_resistance_estimate, diode_quality_factor_estimate]
 
-        solution = parameter_extraction.calculate(parameter_estimates)
+        parameter_extraction.calculate(parameter_estimates)
 
         # Note: Results:
         #   With series_resistance_estimate = 0.5, shunt_resistance_estimate = 1500, diode_quality_factor_estimate = 1.5:
-        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor_estimate = 1.343
+        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor = 1.343
         #   With series_resistance_estimate = 1, shunt_resistance_estimate = 1, diode_quality_factor_estimate = 1:
         #        (1 is chosen because the two latter parameters are used in the denominator of divisions and 0 cannot be used.)
-        #        series_resistance = 0.577100619127, shunt_resistance = 1471.6762257, diode_quality_factor_estimate = 1.32304017483
+        #        series_resistance = 0.577100619127, shunt_resistance = 1471.6762257, diode_quality_factor = 1.32304017483
         #   With series_resistance_estimate = 1, shunt_resistance_estimate = 1000, diode_quality_factor_estimate = 1:
-        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor_estimate = 1.343 
+        #        series_resistance = 0.56, shunt_resistance = 1862, diode_quality_factor = 1.343 
         self.assertAlmostEqual(parameter_extraction.series_resistance, 0.47, delta = 0.2) # [Ohm]
         self.assertAlmostEqual(parameter_extraction.shunt_resistance, 1365, delta = 110) # [Ohm]
         self.assertAlmostEqual(parameter_extraction.diode_quality_factor, 1.397, delta = 0.08)  
@@ -115,17 +115,17 @@ class TestParameterExtraction(unittest.TestCase):
         # diode_quality_factor_estimate = 1               
         parameter_estimates = [series_resistance_estimate, shunt_resistance_estimate, diode_quality_factor_estimate]
 
-        solution = parameter_extraction.calculate(parameter_estimates)
+        parameter_extraction.calculate(parameter_estimates)
 
         # Note: Results:
         #   With number_of_iterations = 1000, series_resistance_estimate = 1.0, shunt_resistance_estimate = 900, diode_quality_factor_estimate = 1.5:
-        #        series_resistance = 0.115493194076, shunt_resistance = 655596.982698, diode_quality_factor_estimate = 1.27995759761        
+        #        series_resistance = 0.115493194076, shunt_resistance = 655596.982698, diode_quality_factor = 1.27995759761        
         #   With number_of_iterations = 1000, series_resistance_estimate = 0.5, shunt_resistance_estimate = 1500, diode_quality_factor_estimate = 1.5:
-        #        series_resistance = 0.115493194076, shunt_resistance = 655596.982698, diode_quality_factor_estimate = 1.27995759761
+        #        series_resistance = 0.115493194076, shunt_resistance = 655596.982698, diode_quality_factor = 1.27995759761
         #   With number_of_iterations = 1000, series_resistance_estimate = 1, shunt_resistance_estimate = 1, diode_quality_factor_estimate = 1:
         #        (1 is chosen because the two latter parameters are used in the denominator of divisions and 0 cannot be used.)
         #        RuntimeWarning: The iteration is not making good progress, as measured by the improvement from the last ten iterations.
-        #        series_resistance = -32.8604015489, shunt_resistance = 36.4430900554, diode_quality_factor_estimate = -177.346609341
+        #        series_resistance = -32.8604015489, shunt_resistance = 36.4430900554, diode_quality_factor = -177.346609341
         # self.assertAlmostEqual(parameter_extraction.series_resistance, 0.47, delta = 0.2) # [Ohm]
         # self.assertAlmostEqual(parameter_extraction.shunt_resistance, 1365, delta = 50) # [Ohm]
         # self.assertAlmostEqual(parameter_extraction.diode_quality_factor, 1.397, delta = 0.1)  

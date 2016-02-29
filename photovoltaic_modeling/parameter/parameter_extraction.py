@@ -63,8 +63,6 @@ class ParameterExtraction(object):
 
         self.diode_quality_factor = self.__diode_quality_factor()
 
-        return solution
-
     def __diode_quality_factor(self):
         return (self.thermal_voltage * self.charge_of_electron) / (self.boltzmann_constant * self.nominal_temperature)
 
