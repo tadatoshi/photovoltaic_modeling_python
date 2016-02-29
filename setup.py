@@ -84,7 +84,9 @@ setup(
     packages=['photovoltaic_modeling', 'tests.photovoltaic_modeling', 
               'photovoltaic_modeling.parameter', 'tests.photovoltaic_modeling.parameter', 
               'photovoltaic_modeling.diode_model', 'tests.photovoltaic_modeling.diode_model', 
-              'photovoltaic_modeling.examples'], 
+              'photovoltaic_modeling.examples', 
+              'photovoltaic_modeling.examples.parameter', 
+              'photovoltaic_modeling.examples.diode_model.single_diode_model'], 
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:

@@ -9,6 +9,7 @@ class TestMultipleModulesSingleDiodeModel(unittest.TestCase):
         # Values for BP MSX120:
         short_circuit_current = 3.87
         open_circuit_voltage = 42.1
+        temperature_voltage_coefficient = -0.08
         temperature_current_coefficient = 0.065
         series_resistance = 0.581350667
         shunt_resistance = 1398.292572
@@ -24,6 +25,7 @@ class TestMultipleModulesSingleDiodeModel(unittest.TestCase):
                                                                               open_circuit_voltage, 
                                                                               number_of_cells_in_series, 
                                                                               number_of_voltage_decimal_digits = number_of_voltage_decimal_digits, 
+                                                                              temperature_voltage_coefficient = temperature_voltage_coefficient, 
                                                                               temperature_current_coefficient = temperature_current_coefficient, 
                                                                               series_resistance = series_resistance, 
                                                                               shunt_resistance = shunt_resistance, 

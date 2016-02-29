@@ -7,6 +7,7 @@ class MultipleModulesSingleDiodeModel(object):
                  open_circuit_voltage, 
                  number_of_cells_in_series, 
                  number_of_voltage_decimal_digits = 1, 
+                 temperature_voltage_coefficient = -0.123, 
                  temperature_current_coefficient = 0.0032, 
                  series_resistance = 0.221, 
                  shunt_resistance = 415.405, 
@@ -17,6 +18,7 @@ class MultipleModulesSingleDiodeModel(object):
         self.open_circuit_voltage = round(open_circuit_voltage, number_of_voltage_decimal_digits)
         self.number_of_cells_in_series = number_of_cells_in_series
         self.number_of_voltage_decimal_digits = number_of_voltage_decimal_digits
+        self.temperature_voltage_coefficient = temperature_voltage_coefficient
         self.temperature_current_coefficient = temperature_current_coefficient
 
         self.series_resistance = series_resistance
@@ -86,7 +88,8 @@ class MultipleModulesSingleDiodeModel(object):
         single_diode_model = SingleDiodeModel(self.short_circuit_current, 
                                               overall_open_circuit_voltage, 
                                               overall_number_of_cells_in_series, 
-                                              number_of_voltage_decimal_digits = self.number_of_voltage_decimal_digits,
+                                              number_of_voltage_decimal_digits = self.number_of_voltage_decimal_digits, 
+                                              temperature_voltage_coefficient = self.temperature_voltage_coefficient, 
                                               temperature_current_coefficient = self.temperature_current_coefficient, 
                                               series_resistance = self.series_resistance, 
                                               shunt_resistance = self.shunt_resistance, 

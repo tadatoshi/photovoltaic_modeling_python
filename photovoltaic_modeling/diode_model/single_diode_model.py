@@ -1,6 +1,14 @@
 from math import exp
 import numpy
 
+'''
+References
+-----------
+
+[1] D. Sera, R. Teodorescu, and P. Rodriguez, "PV panel model based on datasheet values," in Industrial Electronics, 2007. ISIE 2007. IEEE International Symposium on, 2007, pp. 2392-2396.
+[2] M. G. Villalva and J. R. Gazoli, ”Comprehensive approach to modeling and simulation of photovoltaic arrays,” Power Electronics, IEEE Trans- actions on, vol. 24, pp. 1198-1208, 2009.
+[3] A. Bellini, S. Bifaretti, V. Iacovone, and C. Cornaro, ”Simplified model of a photovoltaic module,” in Applied Electronics, 2009. AE 2009, 2009, pp. 47-51.
+'''
 class SingleDiodeModel(object):
 
     boltzmann_constant = 1.38065e-23
@@ -9,30 +17,37 @@ class SingleDiodeModel(object):
     nominal_irradiance = 1000
     band_gap = 1.12 # Silicon at 25 degrees celcius
 
+    # temperature_voltage_coefficient [v/ºC] not [%/ºC]
+    # temperature_current_coefficient [A/ºC] not [%/ºC]
     def __init__(self, 
                  short_circuit_current, 
                  open_circuit_voltage, 
                  number_of_cells_in_series, 
                  number_of_voltage_decimal_digits = 1,
+                 temperature_voltage_coefficient = -0.123,
                  temperature_current_coefficient = 0.0032, 
                  series_resistance = 0.221, 
                  shunt_resistance = 415.405, 
                  diode_quality_factor = 1.3):
+
         self.number_of_voltage_decimal_digits = number_of_voltage_decimal_digits
 
-        self.short_circuit_current = short_circuit_current
+        self.short_circuit_current = self.__convert_to_float(short_circuit_current)
         # Make sure that the voltage has the specified number of decimal digits:
-        self.open_circuit_voltage = round(open_circuit_voltage, number_of_voltage_decimal_digits)
+        self.open_circuit_voltage = round(self.__convert_to_float(open_circuit_voltage), self.number_of_voltage_decimal_digits)
         self.number_of_cells_in_series = number_of_cells_in_series
+        self.temperature_voltage_coefficient = temperature_voltage_coefficient
         self.temperature_current_coefficient = temperature_current_coefficient
         self.series_resistance = series_resistance
         self.shunt_resistance = shunt_resistance
         self.diode_quality_factor = diode_quality_factor
 
     def calculate(self, operating_temperature, actual_irradiance):
+
         nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
-        nominal_saturation_current = self.__nominal_saturation_current(nominal_thermal_voltage)
-        saturation_current = self.__saturation_current(nominal_saturation_current, operating_temperature)
+        # nominal_saturation_current = self.__nominal_saturation_current(nominal_thermal_voltage)
+        # saturation_current = self.__saturation_current(nominal_saturation_current, operating_temperature)
+        saturation_current = self.__saturation_current(operating_temperature, nominal_thermal_voltage)
 
         nominal_photo_current = self.short_circuit_current
         
@@ -40,15 +55,17 @@ class SingleDiodeModel(object):
 
         operating_thermal_voltage = self.__thermal_voltage(operating_temperature)
 
-        # Make sure to take number of decimal digits into account:
-        number_of_elements = int(self.open_circuit_voltage * 10**self.number_of_voltage_decimal_digits) + 1
+        actual_open_circuit_voltage = round(self.__actual_voltage(self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
+        actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)        
 
-        self.voltages = numpy.linspace(0., float(self.open_circuit_voltage), number_of_elements)
+        # Make sure to take number of decimal digits into account:
+        number_of_elements = int(actual_open_circuit_voltage * 10**self.number_of_voltage_decimal_digits) + 1
+
+        self.voltages = numpy.linspace(0., actual_open_circuit_voltage, number_of_elements)
         self.currents = numpy.zeros((1, number_of_elements)).flatten()
         self.powers = numpy.zeros((1, number_of_elements)).flatten()
 
-        # Assumes that short circuit current changes proportionally with actual irradiance (i.e. not taking into account the temperature for now)
-        self.currents[0] = self.short_circuit_current * (actual_irradiance / self.nominal_irradiance)
+        self.currents[0] = actual_short_circuit_current
         
         # The last current element doesn't become 0 based on the iterative calculation below. 
         # Hence, the for loop below is stopped at the element before the last element. 
@@ -64,14 +81,26 @@ class SingleDiodeModel(object):
 
             self.powers[i] = self.voltages[i] * self.currents[i]
 
+    def __convert_to_float(self, value):
+        if isinstance(value, float):
+            return value
+        else:
+            return float(value)        
+
     def __thermal_voltage(self, temperature):
         return (self.number_of_cells_in_series * self.boltzmann_constant * temperature) / self.charge_of_electron
 
-    def __nominal_saturation_current(self, thermal_voltage):
-        return self.short_circuit_current / (exp(self.open_circuit_voltage / (self.diode_quality_factor * thermal_voltage)) - 1)
+    # def __nominal_saturation_current(self, thermal_voltage):
+    #     # Based on equation (6) of [2]:
+    #     return self.short_circuit_current / (exp(self.open_circuit_voltage / (self.diode_quality_factor * thermal_voltage)) - 1)
 
-    def __saturation_current(self, nominal_saturation_current, operating_temperature):
-        return nominal_saturation_current * ((operating_temperature / self.nominal_temperature)**3) * exp(((self.charge_of_electron * self.band_gap) / (self.diode_quality_factor * self.boltzmann_constant)) * ((1/self.nominal_temperature) - (1/operating_temperature)))
+    # def __saturation_current(self, nominal_saturation_current, operating_temperature):
+    #     # Based on equation (5) of [2];
+    #     return nominal_saturation_current * ((operating_temperature / self.nominal_temperature)**3) * exp(((self.charge_of_electron * self.band_gap) / (self.diode_quality_factor * self.boltzmann_constant)) * ((1/self.nominal_temperature) - (1/operating_temperature)))
+
+    def __saturation_current(self, operating_temperature, thermal_voltage):
+        # Based on equation (7) of [2];
+        return (self.short_circuit_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) / (exp((self.open_circuit_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)) / (self.diode_quality_factor * thermal_voltage)) - 1)
 
     def __photo_current(self, actual_irradiance, nominal_photo_current, operating_temperature):
         return (actual_irradiance / self.nominal_irradiance) * (nominal_photo_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
@@ -79,3 +108,9 @@ class SingleDiodeModel(object):
     def __current(self, voltage, current, photo_current, saturation_current, operating_thermal_voltage):
         return photo_current - saturation_current * (exp((voltage + current * self.series_resistance) / (self.diode_quality_factor * operating_thermal_voltage)) - 1) - ((voltage + current * self.series_resistance) / self.shunt_resistance)
 
+    def __actual_current(self, nominal_current, operating_temperature, actual_irradiance):
+        # Based on equation (4) of [2]:
+        return (nominal_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) * (actual_irradiance / self.nominal_irradiance)
+
+    def __actual_voltage(self, nominal_voltage, operating_temperature):
+        return nominal_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)
