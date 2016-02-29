@@ -44,19 +44,21 @@ class SingleDiodeModel(object):
 
     def calculate(self, operating_temperature, actual_irradiance):
 
+        actual_open_circuit_voltage = round(self.__actual_voltage(self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
+        actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)        
+
         nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
         # nominal_saturation_current = self.__nominal_saturation_current(nominal_thermal_voltage)
         # saturation_current = self.__saturation_current(nominal_saturation_current, operating_temperature)
         saturation_current = self.__saturation_current(operating_temperature, nominal_thermal_voltage)
 
-        nominal_photo_current = self.short_circuit_current
+        # nominal_photo_current = self.short_circuit_current
         
-        photo_current = self.__photo_current(actual_irradiance, nominal_photo_current, operating_temperature)
+        # photo_current = self.__photo_current(actual_irradiance, nominal_photo_current, operating_temperature)
+
+        photo_current = actual_short_circuit_current
 
         operating_thermal_voltage = self.__thermal_voltage(operating_temperature)
-
-        actual_open_circuit_voltage = round(self.__actual_voltage(self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
-        actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)        
 
         # Make sure to take number of decimal digits into account:
         number_of_elements = int(actual_open_circuit_voltage * 10**self.number_of_voltage_decimal_digits) + 1
@@ -102,15 +104,15 @@ class SingleDiodeModel(object):
         # Based on equation (7) of [2];
         return (self.short_circuit_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) / (exp((self.open_circuit_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)) / (self.diode_quality_factor * thermal_voltage)) - 1)
 
-    def __photo_current(self, actual_irradiance, nominal_photo_current, operating_temperature):
-        return (actual_irradiance / self.nominal_irradiance) * (nominal_photo_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
+    # def __photo_current(self, actual_irradiance, nominal_photo_current, operating_temperature):
+    #     return (actual_irradiance / self.nominal_irradiance) * (nominal_photo_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
 
     def __current(self, voltage, current, photo_current, saturation_current, operating_thermal_voltage):
         return photo_current - saturation_current * (exp((voltage + current * self.series_resistance) / (self.diode_quality_factor * operating_thermal_voltage)) - 1) - ((voltage + current * self.series_resistance) / self.shunt_resistance)
 
     def __actual_current(self, nominal_current, operating_temperature, actual_irradiance):
         # Based on equation (4) of [2]:
-        return (nominal_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) * (actual_irradiance / self.nominal_irradiance)
+        return (actual_irradiance / self.nominal_irradiance) * (nominal_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
 
     def __actual_voltage(self, nominal_voltage, operating_temperature):
         return nominal_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)
