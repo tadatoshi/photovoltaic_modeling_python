@@ -43,6 +43,7 @@ Different datasheets use different unit (either one of these units). If it's giv
 
     where, Vt: Thermal voltage, A: Diode quality factor, k: Boltzmann constant, T: Temperature at Standard Test Condition (STC),  q: charge of electron
 ```
+This is the definition from reference [1]
 
 Some literatures use 
 ```
@@ -50,6 +51,7 @@ Some literatures use
 
     where, n: number of cells in series
 ```
+For example, reference [2]
 
 But this project uses the first definition above and all the equations are adjusted accordingly.  
 

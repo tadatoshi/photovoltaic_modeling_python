@@ -46,14 +46,14 @@ class TestMultipleModulesSingleDiodeModel(unittest.TestCase):
         currents = multiple_modules_single_diode_model.currents
         powers = multiple_modules_single_diode_model.powers
 
-        self.assertEqual(len(voltages), 814)
-        self.assertEqual(len(currents), 814)
-        self.assertEqual(len(powers), 814)
+        self.assertEqual(len(voltages), 797)
+        self.assertEqual(len(currents), 797)
+        self.assertEqual(len(powers), 797)
         self.assertEqual(voltages[0], 0)
         self.assertEqual(currents[0], short_circuit_current)
-        self.assertEqual(currents[813], 0)
+        self.assertEqual(currents[796], 0)
         self.assertEqual(powers[0], 0)
-        self.assertEqual(powers[813], 0)
+        self.assertEqual(powers[796], 0)
 
         # pyplot.plot(voltages, currents)
         # pyplot.xlabel('Voltage [V]')

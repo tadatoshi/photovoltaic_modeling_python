@@ -43,13 +43,13 @@ class TestSingleDiodeModel(unittest.TestCase):
         currents = self.single_diode_model.currents
         powers = self.single_diode_model.powers
 
-        self.assertEqual(len(voltages), 414)
+        self.assertEqual(len(voltages), 392)
         self.assertEqual(voltages[0], 0)
-        self.assertEqual(voltages[413], 41.3)
-        self.assertEqual(currents[0], 3.895155)
-        self.assertEqual(currents[413], 0)
+        self.assertEqual(voltages[391], 39.1)
+        self.assertAlmostEqual(currents[0], 3.895, delta = 0.001)
+        self.assertEqual(currents[391], 0)
         self.assertEqual(powers[0], 0)
-        self.assertEqual(powers[413], 0)
+        self.assertEqual(powers[391], 0)
 
         # pyplot.plot(voltages, currents)
         # pyplot.xlabel('Voltage [V]')
