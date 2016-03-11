@@ -17,7 +17,7 @@ Automatically installed when this package is installed.
 Use ``pip3``:
 
 ```
-pip3 install root_finding
+pip3 install photovoltaic_modeling
 ```
 
 ## Supported Platforms
@@ -26,7 +26,41 @@ pip3 install root_finding
 
 It's not tested on Python 2.6 or 2.7 yet. 
 
+### Assumptions
+
+* Unit of temperature voltage coefficient: [V/ºC] not [%/ºC]. 
+
+Different datasheets use different unit (either one of these units). If it's given in [%/ºC] in datasheet, make sure to convert it to [V/ºC]. 
+
+* Unit of temperature current coefficient: [A/ºC] not [%/ºC]. 
+
+Different datasheets use different unit (either one of these units). If it's given in [%/ºC] in datasheet, make sure to convert it to [A/ºC].
+
+* Definition of thermal voltage:
+
+```
+    Vt = (AkT) / q
+
+    where, Vt: Thermal voltage, A: Diode quality factor, k: Boltzmann constant, T: Temperature at Standard Test Condition (STC),  q: charge of electron
+```
+
+Some literatures use 
+```
+    Vt = (nkT) / q
+
+    where, n: number of cells in series
+```
+
+But this project uses the first definition above and all the equations are adjusted accordingly.  
+
 ## Usage
+
+### Code examples
+
+
+
+
+
 
 ### Command line execution
 
@@ -53,4 +87,5 @@ The project is available as open source under the terms of the [MIT License](htt
 ## References
 
 [1] D. Sera, R. Teodorescu, and P. Rodriguez, "PV panel model based on datasheet values," in Industrial Electronics, 2007. ISIE 2007. IEEE International Symposium on, 2007, pp. 2392-2396.
-
+[2] M. G. Villalva and J. R. Gazoli, ”Comprehensive approach to modeling and simulation of photovoltaic arrays,” Power Electronics, IEEE Trans- actions on, vol. 24, pp. 1198-1208, 2009.
+[3] A. Bellini, S. Bifaretti, V. Iacovone, and C. Cornaro, ”Simplified model of a photovoltaic module,” in Applied Electronics, 2009. AE 2009, 2009, pp. 47-51.

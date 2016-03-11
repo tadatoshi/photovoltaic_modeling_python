@@ -18,8 +18,10 @@ class SingleDiodeModel(object):
     nominal_irradiance = 1000
     band_gap = 1.12 # Silicon at 25 degrees celcius
 
-    # temperature_voltage_coefficient [v/ºC] not [%/ºC]
-    # temperature_current_coefficient [A/ºC] not [%/ºC]
+    '''
+    temperature_voltage_coefficient [V/ºC] not [%/ºC]
+    temperature_current_coefficient [A/ºC] not [%/ºC]
+    '''
     def __init__(self, 
                  short_circuit_current, 
                  open_circuit_voltage, 
@@ -54,7 +56,7 @@ class SingleDiodeModel(object):
 
         # self.__extract_unknown_paramaters(actual_short_circuit_current, actual_open_circuit_voltage, actual_maximum_power_point_current, actual_maximum_power_point_voltage)
 
-        # nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
+        nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
         # nominal_saturation_current = self.__nominal_saturation_current(nominal_thermal_voltage)
         # saturation_current = self.__saturation_current(nominal_saturation_current, operating_temperature)
 
@@ -115,29 +117,42 @@ class SingleDiodeModel(object):
     #     self.diode_quality_factor = parameter_extraction.diode_quality_factor
 
     def __thermal_voltage(self, temperature):
-        return (self.number_of_cells_in_series * self.boltzmann_constant * temperature) / self.charge_of_electron
+        # The following is based on [2] where number_of_cells_in_series is a part of thermal voltage (defined under equation (3) of [2]):
+        # return (self.number_of_cells_in_series * self.boltzmann_constant * temperature) / self.charge_of_electron
+        # Based on equation (2) of [1]:
+        return (self.diode_quality_factor * self.boltzmann_constant * temperature) / self.charge_of_electron
 
-    # def __nominal_saturation_current(self, thermal_voltage):
-    #     # Based on equation (6) of [2]:
-    #     return self.short_circuit_current / (exp(self.open_circuit_voltage / (self.diode_quality_factor * thermal_voltage)) - 1)
+    def __nominal_saturation_current(self, thermal_voltage):
+        # Based on equation (6) of [2]:
+        # return self.short_circuit_current / (exp(self.open_circuit_voltage / (self.diode_quality_factor * thermal_voltage)) - 1)
+        # The following is based on equation (6) of [2] but thermal_voltage is defined as equation (2) of [1], which includes diode_quality_factor and doesn't include number_of_cells_in_series, and thus the following equation is modified accordingly:
+        return self.short_circuit_current / (exp(self.open_circuit_voltage / (self.number_of_cells_in_series * thermal_voltage)) - 1)
 
     # def __saturation_current(self, nominal_saturation_current, operating_temperature):
     #     # Based on equation (5) of [2];
-    #     return nominal_saturation_current * ((operating_temperature / self.nominal_temperature)**3) * exp(((self.charge_of_electron * self.band_gap) / (self.diode_quality_factor * self.boltzmann_constant)) * ((1/self.nominal_temperature) - (1/operating_temperature)))
+    #     #return nominal_saturation_current * ((operating_temperature / self.nominal_temperature)**3) * exp(((self.charge_of_electron * self.band_gap) / (self.diode_quality_factor * self.boltzmann_constant)) * ((1/self.nominal_temperature) - (1/operating_temperature)))
+    #     # Based on equation (28) of [1] (thermal_voltage is defined as equation (2) of [1], which includes diode_quality_factor and doesn't include number_of_cells_in_series):
+    #     return nominal_saturation_current * ((operating_temperature / self.nominal_temperature)**(3 / self.diode_quality_factor) * exp(((self.charge_of_electron * self.band_gap) / (self.number_of_cells_in_series * self.boltzmann_constant)) * ((1/self.nominal_temperature) - (1/operating_temperature)))
 
     def __saturation_current(self, operating_temperature, thermal_voltage):
         # Based on equation (7) of [2];
-        return (self.short_circuit_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) / (exp((self.open_circuit_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)) / (self.diode_quality_factor * thermal_voltage)) - 1)
+        # return (self.short_circuit_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) / (exp((self.open_circuit_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)) / (self.diode_quality_factor * thermal_voltage)) - 1)
+        # The following is based on equation (7) of [2] but thermal_voltage is defined as equation (2) of [1], which includes diode_quality_factor and doesn't include number_of_cells_in_series, and thus the following equation is modified accordingly:
+        return (self.short_circuit_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature)) / (exp((self.open_circuit_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)) / (self.number_of_cells_in_series * thermal_voltage)) - 1)
 
     # def __photo_current(self, actual_irradiance, nominal_photo_current, operating_temperature):
     #     return (actual_irradiance / self.nominal_irradiance) * (nominal_photo_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
 
     def __current(self, voltage, current, photo_current, saturation_current, operating_thermal_voltage):
-        return photo_current - saturation_current * (exp((voltage + current * self.series_resistance) / (self.diode_quality_factor * operating_thermal_voltage)) - 1) - ((voltage + current * self.series_resistance) / self.shunt_resistance)
+        # Based on equation (3) of [2]:
+        #return photo_current - saturation_current * (exp((voltage + current * self.series_resistance) / (self.diode_quality_factor * operating_thermal_voltage)) - 1) - ((voltage + current * self.series_resistance) / self.shunt_resistance)
+        # Based on equation (1) of [1] (thermal_voltage is defined as equation (2) of [1], which includes diode_quality_factor and doesn't include number_of_cells_in_series):
+        return photo_current - saturation_current * (exp((voltage + current * self.series_resistance) / (self.number_of_cells_in_series * operating_thermal_voltage)) - 1) - ((voltage + current * self.series_resistance) / self.shunt_resistance)
 
     def __actual_current(self, nominal_current, operating_temperature, actual_irradiance):
-        # Based on equation (4) of [2]:
+        # Based on equation (4) of [2], which uses [A/ºC] as the unit of temperature_current_coefficient (Note: Some datasheets use [%/ºC] as unit):
         return (actual_irradiance / self.nominal_irradiance) * (nominal_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
 
     def __actual_voltage(self, nominal_voltage, operating_temperature):
+        # Based on equation (24) of [1] but taking into account that the unit of temperature_voltage_coefficient is [V/ºC] instead of [%/ºC]. (Note: Different datasheets use either of these units):
         return nominal_voltage + self.temperature_voltage_coefficient * (operating_temperature - self.nominal_temperature)
