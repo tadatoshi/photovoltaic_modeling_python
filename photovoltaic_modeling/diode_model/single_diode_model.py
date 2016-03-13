@@ -49,16 +49,16 @@ class SingleDiodeModel(object):
     def calculate(self, operating_temperature, actual_irradiance):
 
         nominal_thermal_voltage = self.__thermal_voltage(self.nominal_temperature)
-
         operating_thermal_voltage = self.__thermal_voltage(operating_temperature)
 
+        nominal_saturation_current = self.__saturation_current(self.nominal_temperature, nominal_thermal_voltage)
         saturation_current = self.__saturation_current(operating_temperature, operating_thermal_voltage)
 
         actual_short_circuit_current = self.__actual_current(self.short_circuit_current, operating_temperature, actual_irradiance)      
 
         photo_current = actual_short_circuit_current
 
-        actual_open_circuit_voltage = round(self.__actual_voltage(photo_current, saturation_current, nominal_thermal_voltage, self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
+        actual_open_circuit_voltage = round(self.__actual_voltage(photo_current, nominal_saturation_current, nominal_thermal_voltage, self.open_circuit_voltage, operating_temperature), self.number_of_voltage_decimal_digits)
 
         # Make sure to take number of decimal digits into account:
         number_of_elements = int(actual_open_circuit_voltage * 10**self.number_of_voltage_decimal_digits) + 1
@@ -110,6 +110,7 @@ class SingleDiodeModel(object):
         return (actual_irradiance / self.nominal_irradiance) * (nominal_current + self.temperature_current_coefficient * (operating_temperature - self.nominal_temperature))
 
     def __actual_voltage(self, photo_current, saturation_current, nominal_thermal_voltage, nominal_voltage, operating_temperature):
+        # TODO: I-V curve and P-V curve gets the sharp drop near open circuit voltage when irradiance dependence is taken into account 
         # Irradiance dependence:
         single_voltage_irradiance_dependence = SingleVoltageIrradianceDependence(photo_current, 
                                                                                  saturation_current, 

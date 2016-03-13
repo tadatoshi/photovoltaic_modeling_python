@@ -11,14 +11,14 @@ class SingleVoltageIrradianceDependence(object):
 
     def __init__(self, 
                  photo_current, 
-                 saturation_current, 
+                 nominal_saturation_current, 
                  shunt_resistance, 
                  number_of_cells_in_series, 
                  nominal_thermal_voltage, 
                  **optional_keyword_arguments):
 
         self.__photo_current = photo_current
-        self.__saturation_current = saturation_current
+        self.__nominal_saturation_current = nominal_saturation_current
         self.__shunt_resistance = shunt_resistance
         self.__number_of_cells_in_series = number_of_cells_in_series
         self.__nominal_thermal_voltage = nominal_thermal_voltage
@@ -32,7 +32,7 @@ class SingleVoltageIrradianceDependence(object):
         return self.__photo_current
 
     def io(self):
-        return self.__saturation_current
+        return self.__nominal_saturation_current
 
     def rsh(self):
         return self.__shunt_resistance
