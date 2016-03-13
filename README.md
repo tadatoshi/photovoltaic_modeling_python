@@ -156,5 +156,7 @@ The project is available as open source under the terms of the [MIT License](htt
 ## References
 
 [1] D. Sera, R. Teodorescu, and P. Rodriguez, "PV panel model based on datasheet values," in Industrial Electronics, 2007. ISIE 2007. IEEE International Symposium on, 2007, pp. 2392-2396.
+
 [2] M. G. Villalva and J. R. Gazoli, ”Comprehensive approach to modeling and simulation of photovoltaic arrays,” Power Electronics, IEEE Trans- actions on, vol. 24, pp. 1198-1208, 2009.
+
 [3] A. Bellini, S. Bifaretti, V. Iacovone, and C. Cornaro, ”Simplified model of a photovoltaic module,” in Applied Electronics, 2009. AE 2009, 2009, pp. 47-51.

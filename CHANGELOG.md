@@ -9,3 +9,7 @@
 * Moved codes from diode_model project developed on November 23, 2015 and put them under diode_model directory. 
 
 * Modified the code to incorporate irradiance and temperature dependence of voltage and current. 
+
+## photovoltaic_modeling_python 0.2.1 (March 13, 2016) ##
+
+* Added code exampled in README. 
