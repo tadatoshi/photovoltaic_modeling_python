@@ -12,6 +12,8 @@ Also calculates the values for I-V curve and P-V curve based on single diode mod
 
 * scipy
 
+* matplotlib
+
 Automatically installed when this package is installed. 
 
 #### Installation instruction
