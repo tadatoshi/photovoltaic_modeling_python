@@ -16,7 +16,7 @@ if path.isfile(readme_file):
     with open(readme_file, encoding='utf-8') as f:
         long_description = f.read()
 else:
-    long_description = 'Get the parameters that are not available in the datasheet of photovoltaic modules.'
+    long_description = 'Get the parameters that are not available in the datasheet of photovoltaic modules and get I-V and P-V curves.'
 
 # TODO: Modify to use one of the techniques described in https://packaging.python.org/en/latest/single_source_version.html
 # imports __version__ into the local namespace
@@ -33,7 +33,7 @@ setup(
     # version='1.2.0',
     version=__version__,
 
-    description='Get the parameters that are not available in the datasheet of photovoltaic modules.',
+    description='Get the parameters that are not available in the datasheet of photovoltaic modules and get I-V and P-V curves.',
     long_description=long_description,
 
     # The project's main homepage.
@@ -97,7 +97,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     # install_requires=['peppercorn'],
-    install_requires=['numpy', 'scipy'],
+    install_requires=['numpy', 'scipy', 'matplotlib'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
