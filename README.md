@@ -1,6 +1,8 @@
 # PhotovoltaicModelingPython
 
-In order to get the parameters that are not available in the datasheet of photovoltaic modules, equations derived from the diode model are used. Due to the complexity of the equations, numerical method is used to get the parameters.  
+Calculates the parameters that are not available in the datasheet of photovoltaic modules. In order to do so, equations derived from the diode model are used. Due to the complexity of the equations, numerical method is used to get the parameters. 
+
+Also calculates the values for I-V curve and P-V curve based on single diode model. Can draw I-V curve and P-V curve graphs as well. 
 
 ## Installation
 
@@ -89,6 +91,8 @@ It's not tested on Python 2.6 or 2.7 yet.
     ```
 
 2. Single diode model
+
+    Note: Use series_resistance, shunt_resistance, and diode_quality_factor obtained by "1. Parameter Extraction" above. 
 
     Example:
 
