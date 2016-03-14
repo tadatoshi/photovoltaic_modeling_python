@@ -12,4 +12,6 @@
 
 ## photovoltaic_modeling_python 0.2.1 (March 13, 2016) ##
 
-* Added code exampled in README. 
+* Updated setup.py to match the code for version 0.2.0. 
+
+* Added code examples in README. 
