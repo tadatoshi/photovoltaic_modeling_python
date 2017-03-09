@@ -21,12 +21,12 @@ Automatically installed when this package is installed.
 Use ``pip3``:
 
 ```
-pip3 install photovoltaic_modeling
+pip3 install photovoltaic-modeling-python
 ```
 
 ## Supported Platforms
 
-* Python 3.5. 
+* Python 3.5 and 3.6. 
 
 It's not tested on Python 2.6 or 2.7 yet. 
 
